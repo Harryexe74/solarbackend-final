@@ -28,8 +28,15 @@ const app = express();
 // }));
 
 
-app.use(cors());
+// CORS options
+const corsOptions = {
+  origin: 'https://solar-admin-frontend-amber.vercel.app', // Your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  credentials: true, // Allows cookies and credentials if needed
+};
 
+// Use CORS middleware
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
