@@ -13,7 +13,7 @@ export const createCategory = async (req, res) => {
 
         const category = new Category({ name, logo, slug });
         await category.save();
-
+        console.log(category)
         sendSuccessResponse(res, category, "Category created successfully", 201);
     } catch (error) {
         sendErrorResponse(res, error.message);
