@@ -29,11 +29,11 @@ const app = express();
 
 
 // CORS options
-const corsOptions = {
-  origin: 'https://solar-admin-frontend-amber.vercel.app', // Your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-  credentials: true, // Allows cookies and credentials if needed
-};
+// const corsOptions = {
+//   origin: 'https://solar-admin-frontend-amber.vercel.app', // Your frontend URL
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+//   credentials: true, // Allows cookies and credentials if needed
+// };
 
 // Use CORS middleware
 app.use(cors(corsOptions));
