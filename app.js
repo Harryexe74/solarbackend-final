@@ -23,7 +23,7 @@ const __dirname = dirname(__filename);
 const app = express();
 
 // app.use(cors({
-//   origin: ['http://localhost:5173','http://localhost:5174'],
+//   origin: ['http://localhost:5173','http://localhost:5174','https://solar-admin-frontend-amber.vercel.app'],
 //   credentials: true,
 // }));
 
