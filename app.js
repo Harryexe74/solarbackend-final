@@ -23,17 +23,17 @@ const __dirname = dirname(__filename);
 const app = express();
 
 // app.use(cors({
-//   origin: ['http://localhost:5173','http://localhost:5174','https://solar-admin-frontend-amber.vercel.app'],
+//   origin: ['http://localhost:5173','http://localhost:5174','https://solarbackend-final.vercel.app'],
 //   credentials: true,
 // }));
 
 
 // CORS options
-// const corsOptions = {
-//   origin: 'https://solar-admin-frontend-amber.vercel.app', // Your frontend URL
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-//   credentials: true, // Allows cookies and credentials if needed
-// };
+const corsOptions = {
+  origin: 'https://solar-admin-frontend-amber.vercel.app', // Your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  credentials: true, // Allows cookies and credentials if needed
+};
 
 // Use CORS middleware
 app.use(cors(corsOptions));
