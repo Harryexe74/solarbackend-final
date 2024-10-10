@@ -113,22 +113,37 @@ import fs from "fs";
 import path from "path";
 import slugify from "slugify";
 
-// Create a new category
+
+import cloudinary from 'cloudinary';
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export const createCategory = async (req, res) => {
     try {
         const { name } = req.body;
-        const logo = req.file ? req.file.filename : null; // Save uploaded file if exists
+        let logo = null;
+
+        // Upload image to Cloudinary
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            logo = result.secure_url;
+        }
+
         const slug = slugify(name, { lower: true });
+        const category = new Category({ name, logo, slug });
+        await category.save();
 
-        const newCategory = new Category({ name, logo, slug });
-        await newCategory.save();
-
-        sendSuccessResponse(res, newCategory, "Category created successfully", 201);
+        sendSuccessResponse(res, category, "Category created successfully", 201);
     } catch (error) {
         console.error("Error creating category:", error);
         sendErrorResponse(res, error.message || "Error creating category", 500);
     }
 };
+
 
 // Get all categories with optional search functionality
 export const getCategories = async (req, res) => {
