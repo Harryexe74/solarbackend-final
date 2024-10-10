@@ -1,3 +1,112 @@
+// import Category from "../models/categoryModel.js";
+// import { sendErrorResponse, sendSuccessResponse } from "../utils/responseHandler.js";
+// import fs from "fs";
+// import path from "path";
+// import slugify from "slugify";
+
+// // Create a new category
+// export const createCategory = async (req, res) => {
+//     try {
+//         const { name} = req.body;
+//         const logo = req.file ? req.file.filename : null;
+//         const slug = slugify(name, { lower: true });
+
+//         const category = new Category({ name, logo, slug });
+//         await category.save();
+//         console.log(category)
+//         sendSuccessResponse(res, category, "Category created successfully", 201);
+//     } catch (error) {
+//         sendErrorResponse(res, error.message);
+//     }
+// };
+
+// // Get all categories with optional search functionality
+// export const getCategories = async (req, res) => {
+//     try {
+//         const { search } = req.query; 
+//         const query = search ? { name: { $regex: search, $options: 'i' } } : {};
+
+//         const categories = await Category.find(query);
+
+//         sendSuccessResponse(res, categories, "Categories fetched successfully");
+//     } catch (error) {
+//         sendErrorResponse(res, error.message);
+//     }
+// };
+
+// // Get a single category by ID
+// export const getCategoryById = async (req, res) => {
+//     try {
+//         const categoryId = req.params.id;
+//         const category = await Category.findById(categoryId);
+        
+//         if (!category) {
+//             return sendErrorResponse(res, "Category not found", 404);
+//         }
+
+//         sendSuccessResponse(res, category, "Category fetched successfully");
+//     } catch (error) {
+//         sendErrorResponse(res, error.message);
+//     }
+// };
+
+// // Update a category by ID
+// export const updateCategory = async (req, res) => {
+//     try {
+//         const { name } = req.body;
+//         const logo = req.file ? req.file.filename : req.body.logo;
+//         const slug = slugify(name, { lower: true });
+
+//         const category = await Category.findByIdAndUpdate(req.params.id, { name, logo, slug }, {
+//             new: true,
+//             runValidators: true,
+//         });
+
+//         if (!category) {
+//             return sendErrorResponse(res, "Category not found", 404);
+//         }
+
+//         sendSuccessResponse(res, category, "Category updated successfully");
+//     } catch (error) {
+//         sendErrorResponse(res, error.message);
+//     }
+// };
+
+// // Delete a category by ID
+// export const deleteCategory = async (req, res) => {
+//     try {
+//         const category = await Category.findByIdAndDelete(req.params.id);
+//         if (!category) {
+//             return sendErrorResponse(res, "Category not found", 404);
+//         }
+
+//         if (category.logo) {
+//             fs.unlinkSync(path.join("uploads", category.logo));
+//         }
+
+//         sendSuccessResponse(res, category, "Category deleted successfully");
+//     } catch (error) {
+//         sendErrorResponse(res, error.message);
+//     }
+// };
+
+// // Get category by slug
+// export const getCategoryBySlug = async (req, res) => {
+//     try {
+//         const slug = req.params.slug;
+//         const category = await Category.findOne({ slug });
+
+//         if (!category) {
+//             return sendErrorResponse(res, "Category not found", 404);
+//         }
+
+//         sendSuccessResponse(res, category, "Category fetched successfully");
+//     } catch (error) {
+//         sendErrorResponse(res, error.message);
+//     }
+// };
+
+
 import Category from "../models/categoryModel.js";
 import { sendErrorResponse, sendSuccessResponse } from "../utils/responseHandler.js";
 import fs from "fs";
@@ -7,30 +116,32 @@ import slugify from "slugify";
 // Create a new category
 export const createCategory = async (req, res) => {
     try {
-        const { name} = req.body;
-        const logo = req.file ? req.file.filename : null;
+        const { name } = req.body;
+        const logo = req.file ? req.file.filename : null; // Save uploaded file if exists
         const slug = slugify(name, { lower: true });
 
-        const category = new Category({ name, logo, slug });
-        await category.save();
-        console.log(category)
-        sendSuccessResponse(res, category, "Category created successfully", 201);
+        const newCategory = new Category({ name, logo, slug });
+        await newCategory.save();
+
+        sendSuccessResponse(res, newCategory, "Category created successfully", 201);
     } catch (error) {
-        sendErrorResponse(res, error.message);
+        console.error("Error creating category:", error);
+        sendErrorResponse(res, error.message || "Error creating category", 500);
     }
 };
 
 // Get all categories with optional search functionality
 export const getCategories = async (req, res) => {
     try {
-        const { search } = req.query; 
-        const query = search ? { name: { $regex: search, $options: 'i' } } : {};
+        const { search } = req.query;
+        const query = search ? { name: { $regex: search, $options: 'i' } } : {}; // Case-insensitive search
 
         const categories = await Category.find(query);
 
         sendSuccessResponse(res, categories, "Categories fetched successfully");
     } catch (error) {
-        sendErrorResponse(res, error.message);
+        console.error("Error fetching categories:", error);
+        sendErrorResponse(res, error.message || "Error fetching categories", 500);
     }
 };
 
@@ -39,14 +150,15 @@ export const getCategoryById = async (req, res) => {
     try {
         const categoryId = req.params.id;
         const category = await Category.findById(categoryId);
-        
+
         if (!category) {
             return sendErrorResponse(res, "Category not found", 404);
         }
 
         sendSuccessResponse(res, category, "Category fetched successfully");
     } catch (error) {
-        sendErrorResponse(res, error.message);
+        console.error("Error fetching category by ID:", error);
+        sendErrorResponse(res, error.message || "Error fetching category", 500);
     }
 };
 
@@ -54,21 +166,23 @@ export const getCategoryById = async (req, res) => {
 export const updateCategory = async (req, res) => {
     try {
         const { name } = req.body;
-        const logo = req.file ? req.file.filename : req.body.logo;
+        const logo = req.file ? req.file.filename : req.body.logo; // Use new logo if file is uploaded, otherwise keep old one
         const slug = slugify(name, { lower: true });
 
-        const category = await Category.findByIdAndUpdate(req.params.id, { name, logo, slug }, {
-            new: true,
-            runValidators: true,
-        });
+        const updatedCategory = await Category.findByIdAndUpdate(
+            req.params.id, 
+            { name, logo, slug }, 
+            { new: true, runValidators: true }
+        );
 
-        if (!category) {
+        if (!updatedCategory) {
             return sendErrorResponse(res, "Category not found", 404);
         }
 
-        sendSuccessResponse(res, category, "Category updated successfully");
+        sendSuccessResponse(res, updatedCategory, "Category updated successfully");
     } catch (error) {
-        sendErrorResponse(res, error.message);
+        console.error("Error updating category:", error);
+        sendErrorResponse(res, error.message || "Error updating category", 500);
     }
 };
 
@@ -76,17 +190,23 @@ export const updateCategory = async (req, res) => {
 export const deleteCategory = async (req, res) => {
     try {
         const category = await Category.findByIdAndDelete(req.params.id);
+
         if (!category) {
             return sendErrorResponse(res, "Category not found", 404);
         }
 
+        // If the category has an associated logo, delete it from the server
         if (category.logo) {
-            fs.unlinkSync(path.join("uploads", category.logo));
+            const filePath = path.join("uploads", category.logo);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath); // Delete the file
+            }
         }
 
         sendSuccessResponse(res, category, "Category deleted successfully");
     } catch (error) {
-        sendErrorResponse(res, error.message);
+        console.error("Error deleting category:", error);
+        sendErrorResponse(res, error.message || "Error deleting category", 500);
     }
 };
 
@@ -102,6 +222,7 @@ export const getCategoryBySlug = async (req, res) => {
 
         sendSuccessResponse(res, category, "Category fetched successfully");
     } catch (error) {
-        sendErrorResponse(res, error.message);
+        console.error("Error fetching category by slug:", error);
+        sendErrorResponse(res, error.message || "Error fetching category", 500);
     }
 };
