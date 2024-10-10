@@ -33,13 +33,13 @@ const server = app.listen(port, () => {
 });
 
 // Handle termination signals for graceful shutdown
-const shutdown = (signal) => {
-    console.log(`Received ${signal}. Closing server...`);
-    server.close(() => {
-        console.log('Server closed.');
-        process.exit(0); // Exit the process successfully
-    });
-};
+// const shutdown = (signal) => {
+//     console.log(`Received ${signal}. Closing server...`);
+//     server.close(() => {
+//         console.log('Server closed.');
+//         process.exit(0); // Exit the process successfully
+//     });
+// };
 
-process.on('SIGINT', () => shutdown('SIGINT'));
-process.on('SIGTERM', () => shutdown('SIGTERM'));
+// process.on('SIGINT', () => shutdown('SIGINT'));
+// process.on('SIGTERM', () => shutdown('SIGTERM'));
