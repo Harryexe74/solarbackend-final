@@ -116,42 +116,45 @@ import slugify from "slugify";
 
 import cloudinary from 'cloudinary';
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
 export const createCategory = async (req, res) => {
     try {
         const { name } = req.body;
-        const logo = req.file ? req.file.filename : null;
-        const slug = slugify(name, { lower: true });
 
+        // Upload logo to Cloudinary if file exists
+        let logo;
+        if (req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            logo = result.secure_url; // Save the secure URL returned by Cloudinary
+        }
+
+        const slug = slugify(name, { lower: true });
         const category = new Category({ name, logo, slug });
         await category.save();
 
         sendSuccessResponse(res, category, "Category created successfully", 201);
     } catch (error) {
-        console.error("Error creating category:", error); // Logs the full error
+        console.error("Error creating category:", error);
         sendErrorResponse(res, error.message || "Something went very wrong!", 500);
     }
 };
 
 
 
+
 // Get all categories with optional search functionality
 export const getCategories = async (req, res) => {
     try {
-        const { search } = req.query;
-        const query = search ? { name: { $regex: search, $options: 'i' } } : {}; // Case-insensitive search
-
-        const categories = await Category.find(query);
-
-        sendSuccessResponse(res, categories, "Categories fetched successfully");
+        const categories = await Category.find(); // Retrieve all categories
+        res.status(200).json({
+            success: true,
+            message: "Categories fetched successfully",
+            docs: categories,
+        });
     } catch (error) {
-        console.error("Error fetching categories:", error);
-        sendErrorResponse(res, error.message || "Error fetching categories", 500);
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
     }
 };
 
