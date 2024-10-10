@@ -125,24 +125,19 @@ cloudinary.config({
 export const createCategory = async (req, res) => {
     try {
         const { name } = req.body;
-        let logo = null;
-
-        // Upload image to Cloudinary
-        if (req.file) {
-            const result = await cloudinary.uploader.upload(req.file.path);
-            logo = result.secure_url;
-        }
-
+        const logo = req.file ? req.file.filename : null;
         const slug = slugify(name, { lower: true });
+
         const category = new Category({ name, logo, slug });
         await category.save();
 
         sendSuccessResponse(res, category, "Category created successfully", 201);
     } catch (error) {
-        console.error("Error creating category:", error);
-        sendErrorResponse(res, error.message || "Error creating category", 500);
+        console.error("Error creating category:", error); // Logs the full error
+        sendErrorResponse(res, error.message || "Something went very wrong!", 500);
     }
 };
+
 
 
 // Get all categories with optional search functionality
