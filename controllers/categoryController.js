@@ -112,10 +112,16 @@ import { sendErrorResponse, sendSuccessResponse } from "../utils/responseHandler
 import fs from "fs";
 import path from "path";
 import slugify from "slugify";
+import cloudinary from "cloudinary";
 
+// Ensure Cloudinary is configured
+cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-import cloudinary from 'cloudinary';
-
+// Create a category
 export const createCategory = async (req, res) => {
     try {
         const { name } = req.body;
@@ -138,23 +144,14 @@ export const createCategory = async (req, res) => {
     }
 };
 
-
-
-
-// Get all categories with optional search functionality
+// Get all categories
 export const getCategories = async (req, res) => {
     try {
         const categories = await Category.find(); // Retrieve all categories
-        res.status(200).json({
-            success: true,
-            message: "Categories fetched successfully",
-            docs: categories,
-        });
+        sendSuccessResponse(res, categories, "Categories fetched successfully");
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
+        console.error("Error fetching categories:", error);
+        sendErrorResponse(res, error.message || "Error fetching categories", 500);
     }
 };
 
@@ -179,12 +176,20 @@ export const getCategoryById = async (req, res) => {
 export const updateCategory = async (req, res) => {
     try {
         const { name } = req.body;
-        const logo = req.file ? req.file.filename : req.body.logo; // Use new logo if file is uploaded, otherwise keep old one
         const slug = slugify(name, { lower: true });
 
+        // Handle logo update if a new file is uploaded
+        let logo;
+        if (req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            logo = result.secure_url; // New logo URL from Cloudinary
+        } else {
+            logo = req.body.logo; // Keep old logo if no new file is uploaded
+        }
+
         const updatedCategory = await Category.findByIdAndUpdate(
-            req.params.id, 
-            { name, logo, slug }, 
+            req.params.id,
+            { name, logo, slug },
             { new: true, runValidators: true }
         );
 
@@ -208,12 +213,10 @@ export const deleteCategory = async (req, res) => {
             return sendErrorResponse(res, "Category not found", 404);
         }
 
-        // If the category has an associated logo, delete it from the server
+        // If the category has an associated logo, delete it from Cloudinary
         if (category.logo) {
-            const filePath = path.join("uploads", category.logo);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath); // Delete the file
-            }
+            const publicId = category.logo.split('/').pop().split('.')[0]; // Extract public ID from URL
+            await cloudinary.v2.uploader.destroy(publicId); // Delete from Cloudinary
         }
 
         sendSuccessResponse(res, category, "Category deleted successfully");
