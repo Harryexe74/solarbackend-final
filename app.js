@@ -22,18 +22,15 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-const corsOptions = {
-  origin: "http://localhost:5173, https://m-tech-store-admin.vercel.app", // Replace with your actual Vercel domain
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true,
-};
-app.use(cors(corsOptions));
-
 
 app.use(cors({
-  origin: '*',  
-  credentials: true,
+    origin: 'https://m-tech-store-admin.vercel.app', // Replace with your frontend URL
+    credentials: true, // If cookies or other credentials are involved
 }));
+
+
+app.use(cors({ origin: '*' }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
