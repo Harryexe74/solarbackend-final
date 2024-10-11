@@ -19,7 +19,3 @@ function checkObjectId(req, res, next) {
 }
 
 export default checkObjectId;
-
-
-
-

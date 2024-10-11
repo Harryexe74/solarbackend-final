@@ -33,6 +33,3 @@ router
 	.delete(protect, restrictTo("admin", "customer"), deleteCustomer);
 
 export default router;
-
-
-

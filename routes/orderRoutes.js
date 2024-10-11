@@ -49,6 +49,3 @@ router.put('/:id/status', updateOrderStatus);
 router.delete('/:id', deleteOrder);
 
 export default router;
-
-
-

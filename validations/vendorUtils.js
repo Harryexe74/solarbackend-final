@@ -27,7 +27,3 @@ export const applyVendorSearchFilters = (filters) => {
 
   return query;
 };
-
-
-
-

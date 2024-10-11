@@ -17,5 +17,3 @@ export const sendErrorResponse = (res, error) => {
          message: 'Internal Server Error',
          error: error.message });
 };
-
-

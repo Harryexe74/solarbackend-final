@@ -87,5 +87,3 @@ export const getAll = (Model) =>
 			doc,
 		});
 	});
-
-

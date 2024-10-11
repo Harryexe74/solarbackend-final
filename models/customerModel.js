@@ -83,6 +83,3 @@ customerSchema.pre("save", async function (next) {
 const Customer = mongoose.model("Customer", customerSchema);
 
 export default Customer;
-
-
-

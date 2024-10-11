@@ -36,7 +36,3 @@ router.put('/:userId/role', updateUserRole);
 router.delete('/:userId', deleteUser);
 
 export default router;
-
-
-
-

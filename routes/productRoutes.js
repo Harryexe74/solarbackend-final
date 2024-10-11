@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // // Product routes
-router.post('/', upload.fields([{ name: 'thumbnail' }, { name: 'images', maxCount: 10 }]), createProduct);
+// router.post('/', upload.fields([{ name: 'thumbnail' }, { name: 'images', maxCount: 10 }]), createProduct);
 
 
 router.post('/', (req, res, next) => {
@@ -65,29 +65,29 @@ router.get('/:id', getProductById);
 router.delete('/:id', deleteProduct);
 
 
-router.get('/feature-product', getFeaturedProducts);
-router.get('/latest-product', getLatestProducts);
-router.get('/top-rated', getTopRatedProducts);
-router.get('/pending', getAllPendingProducts);
-router.get('/approved', getAllApprovedProducts);
-router.get('/filtered', getFilteredProducts);
-router.get('/newest', getNewestProducts);
-// Dynamic routes
-router.get('/vendor/:vendorId/vendor-product', getProductsByVendor);
-router.get('/vendor/:vendorId/pending', getPendingProductsByVendor);
-router.get('/vendor/:vendorId/denied', getDeniedProductsByVendor);
-router.get('/vendor/:vendorId/approved', getApprovedProductsByVendor);
-router.get('/vendor/:vendorId/newest', getNewestProductByVendor);
-router.post('/:productId/reviews', addReview);
-router.get('/:productId/reviews', getProductReviews);
+// // router.get('/feature-product', getFeaturedProducts);
+// // router.get('/latest-product', getLatestProducts);
+// router.get('/top-rated', getTopRatedProducts);
+// // router.get('/pending', getAllPendingProducts);
+// // router.get('/approved', getAllApprovedProducts);
+// router.get('/filtered', getFilteredProducts);
+// // router.get('/newest', getNewestProducts);
+// // Dynamic routes
+// // router.get('/vendor/:vendorId/vendor-product', getProductsByVendor);
+// // router.get('/vendor/:vendorId/pending', getPendingProductsByVendor);
+// // router.get('/vendor/:vendorId/denied', getDeniedProductsByVendor);
+// // router.get('/vendor/:vendorId/approved', getApprovedProductsByVendor);
+// // router.get('/vendor/:vendorId/newest', getNewestProductByVendor);
+// router.post('/:productId/reviews', addReview);
+// router.get('/:productId/reviews', getProductReviews);
 
-router.put('/:id/status', updateProductStatus);
-router.put('/:id/feature', updateProductFeaturedStatus);
-router.put('/:id', updateProduct);
-router.get('/:id', getProductById);
-router.delete('/:id', deleteProduct);
+// router.put('/:id/status', updateProductStatus);
+// router.put('/:id/feature', updateProductFeaturedStatus);
+// router.put('/:id', updateProduct);
+// router.get('/:id', getProductById);
+// router.delete('/:id', deleteProduct);
 
-// Update review status
+// // Update review status
 
 
 
@@ -96,7 +96,6 @@ router.delete('/:id', deleteProduct);
 
 
 export default router;
-
 
 
 

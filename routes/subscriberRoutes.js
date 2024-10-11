@@ -13,6 +13,3 @@ router.post('/', addSubscriber);
 router.delete('/:id', deleteSubscriber);
 
 export default router;
-
-
-

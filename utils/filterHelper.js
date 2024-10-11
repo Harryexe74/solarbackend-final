@@ -47,7 +47,3 @@ export const buildSortOptions = (sort, order) => {
     }
     return sortOptions;
 };
-
-
-
-
