@@ -1,29 +1,5 @@
-// // @ts-check
-// import { isValidObjectId } from "mongoose";
-
-// /**
-//  * Checks if the req.params.id is a valid Mongoose ObjectId.
-//  *
-//  * @param {import('express').Request} req - The Express request object.
-//  * @param {import('express').Response} res - The Express response object.
-//  * @param {import('express').NextFunction} next - The Express next middleware function.
-//  * @throws {Error} Throws an error if the ObjectId is invalid.
-//  */
-
-// function checkObjectId(req, res, next) {
-// 	if (!isValidObjectId(req.params.id)) {
-// 		res.status(404);
-// 		throw new Error(`Invalid ObjectId of:  ${req.params.id}`);
-// 	}
-// 	next();
-// }
-
-// export default checkObjectId;
-
-
 // @ts-check
-import { isValidObjectId } from 'mongoose';
-import AppError from '../utils/appError.js';
+import { isValidObjectId } from "mongoose";
 
 /**
  * Checks if the req.params.id is a valid Mongoose ObjectId.
@@ -31,17 +7,19 @@ import AppError from '../utils/appError.js';
  * @param {import('express').Request} req - The Express request object.
  * @param {import('express').Response} res - The Express response object.
  * @param {import('express').NextFunction} next - The Express next middleware function.
+ * @throws {Error} Throws an error if the ObjectId is invalid.
  */
+
 function checkObjectId(req, res, next) {
-  const { id } = req.params;
-
-  if (!isValidObjectId(id)) {
-    // Pass the error to centralized error handling
-    return next(new AppError(`Invalid ObjectId: ${id}`, 400));
-  }
-
-  // Continue to the next middleware or route handler if the ID is valid
-  next();
+	if (!isValidObjectId(req.params.id)) {
+		res.status(404);
+		throw new Error(`Invalid ObjectId of:  ${req.params.id}`);
+	}
+	next();
 }
 
 export default checkObjectId;
+
+
+
+
