@@ -22,10 +22,12 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-// app.use(cors({
-//   origin: ['http://localhost:5173','http://localhost:5174'],
-//   credentials: true,
-// }));
+const corsOptions = {
+  origin: "http://localhost:5173, https://m-tech-store-admin.vercel.app", // Replace with your actual Vercel domain
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 
 app.use(cors({
