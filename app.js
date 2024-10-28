@@ -16,21 +16,24 @@ import productRoutes from "./routes/productRoutes.js";
 import oderRoutes from "./routes/orderRoutes.js";
 import subscriber from "./routes/subscriberRoutes.js";
 import { sendErrorResponse } from "./utils/responseHandler.js";
+import 'dotenv/config'
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
 const app = express();
 
+// app.use(cors({
+//   origin: ['http://localhost:5173','http://localhost:5174'],
+//   credentials: true,
+// }));
+
 
 app.use(cors({
-    origin: 'https://m-tech-store-admin.vercel.app', // Replace with your frontend URL
-    credentials: true, // If cookies or other credentials are involved
+  origin: '*',  
+  credentials: true,
 }));
-
-
-app.use(cors({ origin: '*' }));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
