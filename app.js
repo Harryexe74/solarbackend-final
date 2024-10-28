@@ -5,7 +5,7 @@ import morgan from "morgan";
 import globalErrorHandler from "./controllers/errorController.js";
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
-
+import axios from 'axios';
 // ROUTES
 
 import userRoutes from "./routes/userRoutes.js";
@@ -21,7 +21,9 @@ import 'dotenv/config'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const axios = require('axios');
 
+console.log(axios.isCancel('something'));
 const app = express();
 
 app.use(cors({
